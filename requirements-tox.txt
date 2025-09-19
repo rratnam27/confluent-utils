@@ -1,0 +1,8 @@
+ruff
+pytest
+pytest-cov
+python-json-logger
+tox
+httpx
+orjson
+fastapi

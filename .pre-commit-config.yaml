@@ -1,0 +1,20 @@
+---
+repos:
+  - repo: https://github.com/trufflesecurity/trufflehog
+    rev: v3.88.2
+    hooks:
+      - id: trufflehog
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.2
+    hooks:
+      - id: ruff
+        args: [ --fix ]
+      - id: ruff-format
