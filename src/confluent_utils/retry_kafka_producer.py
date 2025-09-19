@@ -53,27 +53,23 @@ class RetryKafkaProducer:
                 self.kafka_producer, "value_serializer_type", None
             )
             message_value = message
-            if serializer_type == "avro":
-                # If message is bytes, try to decode and parse as JSON
+            if serializer_type in ("avro", "json"):
                 if isinstance(message, bytes):
                     try:
                         message_value = json.loads(message.decode(errors="replace"))
                     except Exception:
                         message_value = message.decode(errors="replace")
-                # If message is str, try to parse as JSON, else keep as str
                 elif isinstance(message, str):
                     try:
                         message_value = json.loads(message)
                     except Exception:
-                        pass  # keep as str if not JSON
-                # If message is dict, use as-is
+                        message_value = message
                 elif isinstance(message, dict):
                     message_value = message
-                # If message is a model (dataclass, etc.), use as-is (serializer will call .to_dict())
                 else:
                     message_value = message
             else:
-                # For non-avro, keep current logic (string or bytes)
+                # For non-avro, non-json, keep current logic (string or bytes)
                 if isinstance(message, bytes):
                     message_value = message.decode(errors="replace")
                 else:

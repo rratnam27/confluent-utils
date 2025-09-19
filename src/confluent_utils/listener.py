@@ -2,6 +2,7 @@ import threading
 import time
 import logging
 import uuid
+import json
 
 from confluent_kafka import DeserializingConsumer
 from confluent_kafka import KafkaException
@@ -63,6 +64,12 @@ def create_consumer(
             }
         )
         value_deserializer = AvroDeserializer(schema_registry_client, None)
+    elif value_serializer_type == "json":
+
+        def json_value_deserializer(obj, ctx=None):
+            return json.loads(obj.decode("utf-8")) if obj is not None else None
+
+        value_deserializer = json_value_deserializer
 
     # Define security configuration in a separate dictionary
     security_config = {

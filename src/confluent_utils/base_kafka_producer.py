@@ -2,6 +2,7 @@ from typing import Optional, Union, Any
 
 import logging
 import time
+import json
 
 from confluent_kafka import Producer
 from concurrent.futures import Future
@@ -136,6 +137,12 @@ class BaseKafkaProducer:
                     if isinstance(obj, dict)
                     else obj.to_dict(),
                     conf=serializer_config,
+                )
+            elif self.value_serializer_type == "json":
+                self.value_serializer = (
+                    lambda obj, ctx=None: json.dumps(obj).encode("utf-8")
+                    if obj is not None
+                    else None
                 )
             else:
                 # Use string serializer for simple string messages
